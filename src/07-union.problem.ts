@@ -5,7 +5,8 @@ import { z } from "zod";
 
 const Form = z.object({
   repoName: z.string(),
-  privacyLevel: z.string(),
+  // privacyLevel: z.union([z.literal("public"), z.literal("private")]),
+  privacyLevel: z.enum(["public", "private"]),
   //              ^ 🕵️‍♂️
 });
 
@@ -22,7 +23,7 @@ it("Should fail if an invalid privacyLevel passed", async () => {
     validateFormInput({
       repoName: "mattpocock",
       privacyLevel: "something-not-allowed",
-    }),
+    })
   ).toThrowError();
 });
 
@@ -31,13 +32,13 @@ it("Should permit valid privacy levels", async () => {
     validateFormInput({
       repoName: "mattpocock",
       privacyLevel: "private",
-    }).privacyLevel,
+    }).privacyLevel
   ).toEqual("private");
 
   expect(
     validateFormInput({
       repoName: "mattpocock",
       privacyLevel: "public",
-    }).privacyLevel,
+    }).privacyLevel
   ).toEqual("public");
 });
